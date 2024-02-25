@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../context/auth';
+import { useLogin } from '../../hooks/useLogin';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('Sorry, something is wrong. Try again.');
-  const authContext = useAuthContext();
-  const navigate = useNavigate();
+  const { mutate: login, isLoading, isError, error } = useLogin();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    authContext?.setToken('temp');
-    navigate('/');
+    login({username, password});
   };
 
   return (
@@ -45,11 +41,13 @@ function Login() {
             <button
               className="w-full py-2 px-4 bg-indigo-500 rounded-md text-white hover:bg-indigo-600"
               type="submit"
-            >Login</button>
+            >
+              {isLoading ? 'Loading...' : 'Login'}
+            </button>
           </div>
 
           <div>
-            {error && <p className="text-red-500">{error}</p>}  
+            {isError && <p className="text-red-500">{(error as {message: string}).message}</p>}
           </div>
         </form>
       </div>
