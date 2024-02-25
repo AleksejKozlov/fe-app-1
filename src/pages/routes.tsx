@@ -1,27 +1,30 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import Login from './login/Login';
-import Logout from './logout/Logout';
 import Servers from './servers/Servers';
+import ProtectedRoutes from './ProtectedRoutes';
 
 export const router = createBrowserRouter([
+    // public routes
     {
         path: "/",
-        element: <Navigate to="/login" replace />,
+        element: <Navigate to="/servers" replace />,
     },
     {
         path: "*",
-        element: <Navigate to="/login" replace />,
+        element: <Navigate to="/" replace />,
     },
     {
         path: "/login",
         element: <Login />,
     },
+    // protected routes
     {
-        path: "/logout",
-        element: <Logout />,
-    },
-    {
-        path: "/servers",
-        element: <Servers />,
-    },
+        element: <ProtectedRoutes />,
+        children: [
+            {
+                path: "/servers",
+                element: <Servers />,
+            },
+        ] 
+    }
 ]);
